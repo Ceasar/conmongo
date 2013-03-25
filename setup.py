@@ -2,7 +2,7 @@
 """
 from setuptools import Command, setup
 
-version = '0.0.1'
+version = '0.0.2'
 
 class run_audit(Command):
     """Audits source code using PyFlakes for following issues:

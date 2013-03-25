@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from flask import request, g, current_app
+from flask import request, g, abort
 from flask.views import MethodView
 
 from json import jsonify
@@ -30,9 +30,13 @@ class BSONAPI(MethodView):
         Create a new entity.
         """
         entity = request.form.to_dict()
-        self.validate(entity)
-        self.collection.insert(entity)
-        return entity
+        try:
+            self.validate(entity)
+        except AssertionError:
+            abort(400)
+        else:
+            self.collection.insert(entity)
+            return entity
 
     def get(self, _id=None):
         """
