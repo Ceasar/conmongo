@@ -16,12 +16,11 @@ from conmongo import MongoApp
 from conmongo.views import BSONAPI
 
 app = MongoApp(Flask(__name__))
+app.config['DATABASE'] = 'test'
 
 @app.resource('/users/')
 class UserAPI(BSONAPI):
-    @property
-    def collection_name(self):
-        return 'users'
+    collection_name = 'users'
 
 if __name__ == '__main__':
     app.run()
@@ -31,23 +30,23 @@ Now, in another terminal, start a `mongod` instance.
 
 Run the above as a flask app and then head over to `http://localhost:5000/users/`.
 
-You probably won't see anything as there are no model in the database!
+You probably won't see much as we've yet to add anything to the database.
 
-```
+```json
 {
     results: [ ]
 }
 ```
 
-Let's add one now.
+Let's add a record now.
 
-```
+```bash
 curl -v --data "name=john&email=john@example.com" http://127.0.0.1:5001/users/
 ```
 
 Now refresh!
 
-```
+```json
 {
     results: [
         {
@@ -61,7 +60,7 @@ Now refresh!
 
 Your `_id` value may by different. If you copy it and append it to the URL you can inspect `john` in detail.
 
-```
+```json
 {
     _id: "514fb3fd8d3fa362cff26f61",
     name: "john",
@@ -78,9 +77,7 @@ We can change that by adding a `validate` method to our `UserAPI` model like so:
 ```python
 @app.resource('/users/')
 class UserAPI(BSONAPI):
-    @property
-    def collection_name(self):
-        return 'users'
+    collection_name = 'users'
 
     def validate(self, entity):
         assert 'name' in entity
