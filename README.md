@@ -1,4 +1,3 @@
-
 # conmongo
 
 Simple mongodb integration for Flask.
@@ -76,7 +75,7 @@ At the moment, the server does no validation and create documents in our databas
 
 We can change that by adding a `validate` method to our `UserAPI` model like so:
 
-```
+```python
 @app.resource('/users/')
 class UserAPI(BSONAPI):
     @property
